@@ -1,0 +1,27 @@
+{
+    "fx":"fx (N)",
+    "fy":"fy (N)",
+    "fz":"fz (N)",
+    "Total Shear": "Total Shear (N)",
+    "dx_rel":"dx_rel (m)",
+    "dy_rel":"dy_rel (m)",
+    "dz_rel":"dz_rel (m)",
+    "dr_rel":"dr_rel (m)",
+    "dh_rel":"dh_rel (m)",
+    "fxx": "fxx (N)",
+    "fxz": "fxz (N)",
+    "myy": "myy (N-m)",
+    "strain-xx_top":"strain-xx_top",
+    "strain-xx_mid":"strain-xx_mid",
+    "strain-xx_bot":"strain-xx_bot",
+    "Constant Force Utilization":"Constant Force Utilization",
+    "Proportional Utilization":"Proportional Utilization",
+    "strain-xx_mid Tens DCR":"strain-xx_mid Tens DCR",
+    "strain-xx_mid Comp DCR":"strain-xx_mid Comp DCR",
+    "strain-xx_bot Comp DCR":"strain-xx_bot Comp DCR",	
+    "strain-xx_bot Tens DCR":"strain-xx_bot Tens DCR",
+    "strain-xx_top Comp DCR":"strain-xx_top Comp DCR",
+    "strain-xx_top Tens DCR":"strain-xx_top Tens DCR"
+
+
+}
