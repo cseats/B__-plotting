@@ -55,11 +55,16 @@ def plotResults(dowelInput,inputCSVs,savePath,parentDir):
     formats = ['html','jpg']
 
     colNameDict = getColNames()
-    
+    firstStrain = True
     for sheet in inputCSVs:
         inputName = sheet[:-4]
         if "tshell_FM" in sheet:
-            newSheet = addUtilztn.addUtilization_PropFrce(inputName,parentDir)
+            utilSheets = addUtilztn.addUtilization_PropFrce(inputName,parentDir)
+            if firstStrain:
+                newSheet = utilSheets[0]
+                firstStrain=False
+            else:
+                newSheet= utilSheets[1]
         elif "strain" in sheet:
             newSheet = addCompTens.addCompTens(inputName,parentDir)
         elif "dowel_force" in sheet:
@@ -141,7 +146,12 @@ def plotResults(dowelInput,inputCSVs,savePath,parentDir):
 
                     dtick = abs(tickMax-tickMin)/10
                     fig.update_coloraxes(colorbar=dict(dtick=dtick),colorbar_ypad=20,colorbar_title_font_family="Times New Roman",colorbar_title_font_size=12,colorbar_title_side="top")
+                    metMax = max(df[metric].to_list())
+                    metMin = min(df[metric].to_list())
 
+                    fig.add_annotation(text=f"Max: {metMax}  |  Min: {metMin}",
+                                        xref="paper", yref="paper",
+                                         x=1, y=1, showarrow=False)
                     if write =="html":
                         # fig.show()
                         
@@ -159,15 +169,18 @@ def main():
     curVersion = "10-26-2023_V01"
 
     mainPath = os.getcwd()
-    inputsExtent = f"\\inputCSV\\{curVersion}\\{curFolder}"
+    inputsExtent = f"inputCSV\\{curVersion}\\{curFolder}"
     path = os.path.join(mainPath,inputsExtent)
 
-    saveExtent = f"\\results"
-    saveParent = os.path.join(mainPath,saveExtent)
+    saveExtent = f"results"
+    saveParent = os.path.join(mainPath,saveExtent,curVersion)
     if not os.path.exists(saveParent):
                 os.mkdir(saveParent)
 
-    saveLoc = os.path.join(saveParent,curFolder)            
+    saveLoc =os.path.join(saveParent,curFolder)      
+    if not os.path.exists(saveLoc):
+        print("The path does not exist making now ")
+        os.mkdir(saveLoc)            
 
     # path = f"C:\\Users\\camp.seats\\OneDrive - Arup\Documents\\0-GitHub\\2 - FEA\\285400-43 BART Plotting\\BSV-plotting\\inputCSV\\10-25-2023_V02\\{curFolder}"
     # saveLoc = "C:\\Users\\camp.seats\\OneDrive - Arup\\Documents\\0-GitHub\\2 - FEA\\285400-43 BART Plotting\\BSV-plotting\\inputCSV\\10-25-2023_V02\\figures"
@@ -183,7 +196,7 @@ def main():
         inputCSVs = []
         if "." not in i:
             
-            savePath = os.path.join(saveLoc,curFolder,i) #where to save-- local Dir
+            savePath = os.path.join(saveLoc,i) #where to save-- local Dir
             if not os.path.exists(savePath):
                 os.mkdir(savePath)
 

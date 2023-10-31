@@ -318,6 +318,7 @@ def addUtilization_PropFrce(inputName,parentDir):
     sampleX = [-num for num in sampleX]
     sampleY = df['fxx'].to_list()
     sampleY = [-num for num in sampleY]
+    saveFiles = []
     for thickness in thicknessList:
         fig = go.Figure()
         proportionUtil = []
@@ -338,8 +339,8 @@ def addUtilization_PropFrce(inputName,parentDir):
         df['Proportional Utilization'] = proportionUtil
 
         saveFileCSV = inputCSV+" "+thickness+'thick With UtilizationCurve.csv'
-
+        saveFiles.append(saveFileCSV)
         df.to_csv(os.path.join(parentDir,saveFileCSV),index=False)
 
-        return saveFileCSV
+    return saveFiles
         
