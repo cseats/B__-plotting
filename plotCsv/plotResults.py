@@ -5,8 +5,7 @@ import os
 import sys
 import json
 import copy
-# sys.path.insert(0,'C:\\Users\\camp.seats\\OneDrive - Arup\\Documents\\0-GitHub\\2 - FEA\\285400-43 BART Plotting\\BSV-plotting\\interactionDiagram')
-# from plotConstForce_Proportion import test
+
 
 import addDowelFrce
 import addUtilztn
@@ -24,33 +23,13 @@ def addTraceLine(x,y,fig,name):
     fig.add_trace(go.Scatter(x=x,y=y,mode='lines+markers',name=name))
     return fig
 
-# def getDowels():
-#     df = pd.read_csv('dowelPosition.csv')
-#     angle = []
-#     ypos = []
-#     for index, rows in df.iterrows():
-#         if rows["Dowel"] == rows["Dowel"]:
-#             angle.append(rows["Dowel"])
-#         if rows['Ylocation'] == rows['Ylocation']:
-#             ypos.append(rows['Ylocation'])
-#     coords = []
-#     for y in ypos:
-#         xCord = []
-#         yCord = []
-#         for ang in angle:
-#             xCord.append(ang)
-#             yCord.append(y)
-        
-#         coords.append([xCord,yCord])
-#     return coords
+
 def plot_dowels(fig,max,min,input):
     df = pd.read_csv(input)
 
     cyAll = df['cy'].to_list()
     cy= list(set(cyAll))
-    # print(f'Length of cyAll {len(cyAll)}')
-    # print(f'Length of cy {len(cy)}')
-    # fig = go.Figure()
+
     for y in cy:
         dfSub = df[df["cy"]==y]
         if y-.5>max or y+.5<min:
@@ -58,21 +37,11 @@ def plot_dowels(fig,max,min,input):
             # print(f'sorry {y}, youre out of our range of {min} and {max}')
         else:
             fig.add_scatter(x=dfSub['ang_deg'],y=dfSub['cy'],mode='lines',line={'width': 2},showlegend=False,marker_color="#0d0c0c")
-        # fig = addTraceLine(dfSub['ang_deg'],dfSub['cy'],fig,"Test Dowels")
 
-    # fig.show()
-    # print(df['cy'].max())
-    # print(df['cy'].min())
     return fig
 
 
 
-# inputName = 'SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_tshell_FM'
-# inputs = ['SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_tshell_FM','SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_dowel_disp','SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_tshell_strain_xx']
-# inputs = ['SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_tshell_FM3-4thick With UtilizationCurveNew','SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_tshell_FM1-2thick With UtilizationCurveNew','SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_tshell_strain_xx_COMP_TENS','SCFZ_L-SC-1_O-2full_0922_Inner_Plate_002_IB032_dowel_disp']
-
-# inputs = ["SCFZ_L-SC-1_O-1full_1013_Inner_Plate_001_dowel_force","SCFZ_L-SC-1_O-1full_1013_Inner_Plate_001_tie-rod_force"]
-# inputs = ["SCFZ_L-SC-1_O-1full_1013_Inner_Plate_001_dowel_force"]
 
 
 
@@ -160,8 +129,9 @@ def plotResults(dowelInput,inputCSVs,savePath,parentDir):
                             fig.update_traces(marker=dict(size=8))
                         else:
                             fig.update_traces(marker=dict(size=4))
+                    if dowelInput:
+                        fig = plot_dowels(fig,df['cy'].max(),df['cy'].min(),dowelInput)
 
-                    fig = plot_dowels(fig,df['cy'].max(),df['cy'].min(),dowelInput)
                     fig.update_layout(font_family="Times New Roman",
                                     title=dict(text=newSheet+" " ,font=dict(size=14),yref="container"),title_pad_l=90,title_pad_t=30,
                                     xaxis = dict(tickmode="array",tickvals=degreeAxis),xaxis_title="0 = Right Springline | 90 = Crown | 180 = Left Springline | 270 = invert",yaxis_title="cy (meters)")
@@ -186,10 +156,25 @@ def plotResults(dowelInput,inputCSVs,savePath,parentDir):
 
 def main():
     curFolder = "Results full"
-    path = f"C:\\Users\\camp.seats\\OneDrive - Arup\Documents\\0-GitHub\\2 - FEA\\285400-43 BART Plotting\\BSV-plotting\\inputCSV\\10-25-2023_V02\\{curFolder}"
-    saveLoc = "C:\\Users\\camp.seats\\OneDrive - Arup\\Documents\\0-GitHub\\2 - FEA\\285400-43 BART Plotting\\BSV-plotting\\inputCSV\\10-25-2023_V02\\figures"
-    saveLoc = "C:\\Users\\camp.seats\\Documents\\Figures\\10-25-2023_V02"
-    # listDir = os.listdir(path)
+    curVersion = "10-26-2023_V01"
+
+    mainPath = os.getcwd()
+    inputsExtent = f"\\inputCSV\\{curVersion}\\{curFolder}"
+    path = os.path.join(mainPath,inputsExtent)
+
+    saveExtent = f"\\results"
+    saveParent = os.path.join(mainPath,saveExtent)
+    if not os.path.exists(saveParent):
+                os.mkdir(saveParent)
+
+    saveLoc = os.path.join(saveParent,curFolder)            
+
+    # path = f"C:\\Users\\camp.seats\\OneDrive - Arup\Documents\\0-GitHub\\2 - FEA\\285400-43 BART Plotting\\BSV-plotting\\inputCSV\\10-25-2023_V02\\{curFolder}"
+    # saveLoc = "C:\\Users\\camp.seats\\OneDrive - Arup\\Documents\\0-GitHub\\2 - FEA\\285400-43 BART Plotting\\BSV-plotting\\inputCSV\\10-25-2023_V02\\figures"
+    # saveLoc = "C:\\Users\\camp.seats\\Documents\\Figures\\10-25-2023_V02"
+    # listDir = os.listdir(path)+
+
+
     listDir = copy.deepcopy(os.listdir(path))
     print(listDir)
     #iterate through folders
@@ -203,6 +188,7 @@ def main():
                 os.mkdir(savePath)
 
             parentDirList = copy.deepcopy(os.listdir(parentDir))
+            dowelInput = False
             for j in parentDirList:
                 print(j)
                 if "dowel_disp" in j:
