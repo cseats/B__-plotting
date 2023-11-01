@@ -3,6 +3,7 @@ import numpy as np
 import plotly.graph_objects as go
 import math
 import os
+import json
 
 # Ploting fxns
 def plotScatter(x,y,title):
@@ -37,12 +38,16 @@ def getCurves(thickness):
         }
     cwd = os.getcwd()
     curvePath = os.path.join(cwd,"plotCsv","util")
-    df = pd.read_csv(os.path.join(curvePath,thickness+'in_interactionCurves.csv'))
-    cols = list(df.columns)
+    with open(os.path.join(curvePath,thickness+'in_interactionCurves.json'), 'r') as openfile:
+ 
+    # Reading from json file
+        json_curves = json.load(openfile)
+        
+    cols = json_curves.keys()
 
     curves = []
     for c in cols:
-        curves.append(getArray(df,c))
+        curves.append(json_curves[c])
     
     return [curveDict,curves]
 
